@@ -48,7 +48,7 @@ export async function generateTenderPackage(
     color: rgb(1, 1, 1),
   });
 
-  coverPage.drawText('OFFICIAL BID COMPLIANCE DOSSIER', {
+  coverPage.drawText('TENDER SUBMISSION DOCUMENTS', {
     x: 55,
     y: pageHeight - 80,
     size: 9,

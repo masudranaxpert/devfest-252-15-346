@@ -11,15 +11,17 @@ import {
   Unlink,
 } from 'lucide-react';
 import { Language, translations } from '../i18n/translations';
-import { EvaluatedRequirement, UploadedFileRecord, DocumentStatusType } from '../types';
+import { EvaluatedRequirement, UploadedFileRecord, DocumentStatusType } from '../types/index.ts';
+import { CustomSelect } from './ui/CustomSelect';
+import { DatePicker } from './ui/DatePicker';
 
 interface RequirementsTableProps {
-  language: Language;
-  evaluatedRequirements: EvaluatedRequirement[];
-  uploadedFiles: UploadedFileRecord[];
-  onMatchFile: (requirementId: string, fileId: string | null) => void;
-  onSetExpiryDate: (requirementId: string, date: string) => void;
-  duplicateWarningMessage?: string | null;
+  readonly language: Language;
+  readonly evaluatedRequirements: readonly EvaluatedRequirement[];
+  readonly uploadedFiles: readonly UploadedFileRecord[];
+  readonly onMatchFile: (requirementId: string, fileId: string | null) => void;
+  readonly onSetExpiryDate: (requirementId: string, date: string) => void;
+  readonly duplicateWarningMessage?: string | null;
 }
 
 export const RequirementsTable: React.FC<RequirementsTableProps> = ({
@@ -33,7 +35,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
   const t = translations[language];
   const [filterMode, setFilterMode] = useState<'all' | 'blocking' | 'ok'>('all');
 
-  // Set of already matched file IDs by other requirements
+  // Map of matched file IDs by requirement
   const matchedFileIdMap: Record<string, string> = {};
   evaluatedRequirements.forEach((item) => {
     if (item.matchedFile) {
@@ -41,40 +43,56 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
     }
   });
 
+  const getFileOptions = (reqId: string) => {
+    return uploadedFiles.map((f) => {
+      const isAlreadyMatchedToOther =
+        matchedFileIdMap[f.id] && matchedFileIdMap[f.id] !== reqId;
+
+      return {
+        value: f.id,
+        label: f.name,
+        pageCount: f.pageCount,
+        isDuplicate: f.isDuplicate,
+        disabled: Boolean(isAlreadyMatchedToOther),
+        isMatched: Boolean(isAlreadyMatchedToOther),
+      };
+    });
+  };
+
   const getStatusBadge = (status: DocumentStatusType) => {
     switch (status) {
       case 'OK':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             {t.okSuccess}
           </span>
         );
       case 'Missing':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-            <XCircle className="w-3.5 h-3.5 text-rose-600" />
+            <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
             {t.missingError}
           </span>
         );
       case 'Expired':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-            <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+            <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
             {t.expiredError}
           </span>
         );
       case 'Expiry date needed':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
-            <Clock className="w-3.5 h-3.5 text-amber-600" />
+            <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             {t.expiryNeededError}
           </span>
         );
       case 'Not provided':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
+            <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             {t.notProvidedNotice}
           </span>
         );
@@ -90,9 +108,9 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
       {/* Header & Filter Controls */}
-      <div className="p-5 sm:p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <FileText className="w-4 h-4 text-blue-600" />
             {t.checklistTitle}
           </h2>
@@ -102,12 +120,13 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-medium">
-          <Filter className="w-3.5 h-3.5 text-slate-400 ml-1.5" />
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium self-start sm:self-auto" role="group" aria-label="Filter requirements">
+          <Filter className="w-3.5 h-3.5 text-slate-500 ml-1.5 hidden sm:block" />
           <button
             type="button"
             onClick={() => setFilterMode('all')}
-            className={`px-2.5 py-1 rounded-lg transition-colors ${
+            aria-pressed={filterMode === 'all'}
+            className={`px-2.5 py-1 rounded-lg transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
               filterMode === 'all'
                 ? 'bg-white text-slate-900 font-bold shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -118,7 +137,8 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
           <button
             type="button"
             onClick={() => setFilterMode('blocking')}
-            className={`px-2.5 py-1 rounded-lg transition-colors ${
+            aria-pressed={filterMode === 'blocking'}
+            className={`px-2.5 py-1 rounded-lg transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
               filterMode === 'blocking'
                 ? 'bg-white text-rose-700 font-bold shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -131,7 +151,8 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
           <button
             type="button"
             onClick={() => setFilterMode('ok')}
-            className={`px-2.5 py-1 rounded-lg transition-colors ${
+            aria-pressed={filterMode === 'ok'}
+            className={`px-2.5 py-1 rounded-lg transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
               filterMode === 'ok'
                 ? 'bg-white text-emerald-700 font-bold shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -144,15 +165,119 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
         </div>
       </div>
 
-      {duplicateWarningMessage && (
-        <div className="mx-6 my-3 p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-2">
+      {duplicateWarningMessage ? (
+        <div className="mx-4 sm:mx-6 my-3 p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
           <span>{duplicateWarningMessage}</span>
         </div>
-      )}
+      ) : null}
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* MOBILE VIEW: Adaptive Responsive Cards (No horizontal overflow!) */}
+      <div className="block md:hidden divide-y divide-slate-100 p-3 space-y-3">
+        {filteredRequirements.map((item) => {
+          const req = item.requirement;
+          const title = language === 'bn' ? req.title_bn : req.title_en;
+          const hasFile = item.matchedFile !== null;
+
+          return (
+            <div
+              key={req.id}
+              className={`p-3.5 rounded-xl border transition-all ${
+                item.isBlocking
+                  ? 'bg-rose-50/25 border-rose-200/70'
+                  : item.status === 'OK'
+                  ? 'bg-emerald-50/20 border-emerald-200/60'
+                  : 'bg-white border-slate-200/80'
+              }`}
+            >
+              {/* Card Header: Order, Title, Badges */}
+              <div className="flex items-start justify-between gap-2 mb-2.5">
+                <div className="flex items-start gap-2 min-w-0">
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 text-slate-800 text-xs font-bold shrink-0 mt-0.5">
+                    {req.order}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-slate-900 text-xs sm:text-sm leading-snug">
+                      {title}
+                    </h3>
+                    <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                      {req.id} • {req.mandatory ? (
+                        <span className="text-rose-600 font-semibold">{t.mandatory}</span>
+                      ) : (
+                        <span className="text-slate-500">{t.optional}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status Pill */}
+                <div className="shrink-0">
+                  {getStatusBadge(item.status)}
+                </div>
+              </div>
+
+              {/* Card Body: File selector */}
+              <div className="space-y-2 pt-2 border-t border-slate-100/80">
+                <div className="flex items-center gap-1.5">
+                  <CustomSelect
+                    id={`mobile-match-${req.id}`}
+                    name={`mobile-match-${req.id}`}
+                    ariaLabel={`Select file for ${title}`}
+                    value={item.matchedFile?.id || ''}
+                    onChange={(val) => onMatchFile(req.id, val ? val : null)}
+                    placeholder={t.selectFilePlaceholder}
+                    options={getFileOptions(req.id)}
+                  />
+
+                  {hasFile ? (
+                    <button
+                      type="button"
+                      onClick={() => onMatchFile(req.id, null)}
+                      className="p-2 min-h-[38px] min-w-[38px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 border border-slate-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                      title={t.unmatch}
+                      aria-label={`${t.unmatch} ${title}`}
+                    >
+                      <Unlink className="w-3.5 h-3.5" />
+                    </button>
+                  ) : null}
+                </div>
+
+                {/* Expiry Date Row if applicable */}
+                {req.has_expiry ? (
+                  <div className="flex items-center gap-2 pt-1">
+                    <label
+                      htmlFor={`mobile-expiry-${req.id}`}
+                      className="text-[11px] font-medium text-slate-600 shrink-0 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Calendar className="w-3 h-3 text-slate-400" />
+                      {t.expiryDate}:
+                    </label>
+                    <DatePicker
+                      id={`mobile-expiry-${req.id}`}
+                      name={`mobile-expiry-${req.id}`}
+                      ariaLabel={`Expiry date for ${title}`}
+                      value={item.expiryDate || ''}
+                      disabled={!hasFile}
+                      onChange={(date) => onSetExpiryDate(req.id, date)}
+                      hasError={item.status === 'Expired'}
+                    />
+                  </div>
+                ) : null}
+
+                {/* Status Message Text */}
+                {item.isBlocking ? (
+                  <div className="text-[10px] text-rose-600 font-medium pt-1">
+                    {language === 'bn' ? item.statusMessageBn : item.statusMessageEn}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* DESKTOP VIEW: Data Table (clean and spacious for >=768px screens) */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
@@ -178,24 +303,21 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                     item.isBlocking ? 'bg-rose-50/20' : ''
                   }`}
                 >
-                  {/* Order Sequence */}
                   <td className="py-3 px-4 text-center font-bold text-slate-700">
                     <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 text-slate-800 text-xs">
                       {req.order}
                     </span>
                   </td>
 
-                  {/* Document Title */}
                   <td className="py-3 px-4">
                     <div className="font-semibold text-slate-900 text-xs sm:text-sm">
                       {title}
                     </div>
-                    <div className="text-[11px] text-slate-400 font-mono">
+                    <div className="text-[11px] text-slate-500 font-mono">
                       ID: {req.id}
                     </div>
                   </td>
 
-                  {/* Mandatory / Optional Badge */}
                   <td className="py-3 px-4">
                     {req.mandatory ? (
                       <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
@@ -208,39 +330,19 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                     )}
                   </td>
 
-                  {/* Attached File Dropdown / Unmatch */}
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1.5">
-                      <select
-                        aria-label={`Select file for ${title}`}
+                      <CustomSelect
+                        id={`desktop-match-${req.id}`}
+                        name={`desktop-match-${req.id}`}
+                        ariaLabel={`Select file for ${title}`}
                         value={item.matchedFile?.id || ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          onMatchFile(req.id, val ? val : null);
-                        }}
-                        className="w-full text-xs bg-white border border-slate-300 rounded-lg py-1.5 px-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 truncate"
-                      >
-                        <option value="">-- {t.selectFile} --</option>
-                        {uploadedFiles.map((f) => {
-                          const isAlreadyMatchedToOther =
-                            matchedFileIdMap[f.id] &&
-                            matchedFileIdMap[f.id] !== req.id;
+                        onChange={(val) => onMatchFile(req.id, val ? val : null)}
+                        placeholder={t.selectFilePlaceholder}
+                        options={getFileOptions(req.id)}
+                      />
 
-                          return (
-                            <option
-                              key={f.id}
-                              value={f.id}
-                              disabled={Boolean(isAlreadyMatchedToOther)}
-                            >
-                              {f.name} ({f.pageCount}p)
-                              {isAlreadyMatchedToOther ? ' [Matched]' : ''}
-                              {f.isDuplicate ? ' [Duplicate]' : ''}
-                            </option>
-                          );
-                        })}
-                      </select>
-
-                      {hasFile && (
+                      {hasFile ? (
                         <button
                           type="button"
                           onClick={() => onMatchFile(req.id, null)}
@@ -250,54 +352,41 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                         >
                           <Unlink className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                      ) : null}
                     </div>
                   </td>
 
-                  {/* Page Count */}
                   <td className="py-3 px-4 text-center text-slate-700 font-medium">
                     {item.matchedFile ? item.matchedFile.pageCount : '-'}
                   </td>
 
-                  {/* Expiry Date Input */}
                   <td className="py-3 px-4">
                     {req.has_expiry ? (
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <input
-                          type="date"
-                          aria-label={`Expiry date for ${title}`}
-                          value={item.expiryDate || ''}
-                          disabled={!hasFile}
-                          onChange={(e) =>
-                            onSetExpiryDate(req.id, e.target.value)
-                          }
-                          className={`w-full text-xs rounded-lg py-1 px-2 border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            !hasFile
-                              ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
-                              : item.status === 'Expired'
-                              ? 'border-rose-400 bg-rose-50/50 text-rose-900 font-medium'
-                              : 'border-slate-300 bg-white text-slate-800'
-                          }`}
-                        />
-                      </div>
+                      <DatePicker
+                        id={`desktop-expiry-${req.id}`}
+                        name={`desktop-expiry-${req.id}`}
+                        ariaLabel={`Expiry date for ${title}`}
+                        value={item.expiryDate || ''}
+                        disabled={!hasFile}
+                        onChange={(date) => onSetExpiryDate(req.id, date)}
+                        hasError={item.status === 'Expired'}
+                      />
                     ) : (
-                      <span className="text-slate-400 text-[11px] italic">
+                      <span className="text-slate-500 text-[11px] font-medium">
                         N/A
                       </span>
                     )}
                   </td>
 
-                  {/* Status Badge */}
                   <td className="py-3 px-4">
                     <div>{getStatusBadge(item.status)}</div>
-                    {item.isBlocking && (
-                      <div className="text-[10px] text-rose-600 font-medium mt-1">
+                    {item.isBlocking ? (
+                      <div className="text-[10px] text-rose-700 font-semibold mt-1">
                         {language === 'bn'
                           ? item.statusMessageBn
                           : item.statusMessageEn}
                       </div>
-                    )}
+                    ) : null}
                   </td>
                 </tr>
               );

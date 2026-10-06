@@ -1,14 +1,16 @@
 import React, { useRef } from 'react';
-import { Calendar, Building, User, Tag, Upload, Sparkles, AlertCircle } from 'lucide-react';
+import { Calendar, Building2, User2, FolderKanban, Upload, FileDown, AlertCircle } from 'lucide-react';
 import { Language, translations } from '../i18n/translations';
-import { TenderDetails } from '../types';
+import { TenderDetails } from '../types/index.ts';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/Card';
+import { Button } from './ui/Button';
 
 interface TenderOverviewProps {
-  language: Language;
-  tender: TenderDetails | null;
-  onLoadSample: () => void;
-  onImportJson: (file: File) => void;
-  loadError?: string | null;
+  readonly language: Language;
+  readonly tender: TenderDetails | null;
+  readonly onLoadSample: () => void;
+  readonly onImportJson: (file: File) => void;
+  readonly loadError?: string | null;
 }
 
 export const TenderOverview: React.FC<TenderOverviewProps> = ({
@@ -28,101 +30,105 @@ export const TenderOverview: React.FC<TenderOverviewProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 border-b border-slate-100 pb-4">
+    <Card className="shadow-xs overflow-hidden">
+      <CardHeader className="pb-3 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <Tag className="w-4 h-4 text-blue-600" />
+          <CardTitle className="flex items-center gap-2">
+            <FolderKanban className="w-4 h-4 text-blue-600" />
             {t.tenderDetails}
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          </CardTitle>
+          <CardDescription className="mt-0.5 truncate">
             {tender ? tender.title : t.checklistSubtitle}
-          </p>
+          </CardDescription>
         </div>
 
         {/* Action Buttons for Loading Requirements */}
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex items-center gap-2">
           <input
+            id="json-requirements-input"
+            name="json-requirements-input"
             type="file"
             ref={fileInputRef}
             onChange={handleFileChange}
             accept=".json,application/json"
             className="hidden"
           />
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={onLoadSample}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100/80 border border-blue-200 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            className="border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100/80"
           >
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            {t.loadSample}
-          </button>
-          <button
+            <FileDown className="w-3.5 h-3.5 text-blue-600" />
+            <span>{t.loadSample}</span>
+          </Button>
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-50 border border-slate-300 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
           >
             <Upload className="w-3.5 h-3.5 text-slate-500" />
-            {t.loadJson}
-          </button>
+            <span>{t.loadJson}</span>
+          </Button>
         </div>
-      </div>
+      </CardHeader>
 
-      {loadError && (
-        <div className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-          <span>{loadError}</span>
-        </div>
-      )}
-
-      {tender ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <Tag className="w-3 h-3 text-slate-400" />
-              {t.tenderId}
-            </div>
-            <div className="text-sm font-bold text-slate-900 font-mono">{tender.tender_id}</div>
+      <CardContent className="pt-4">
+        {loadError ? (
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <span>{loadError}</span>
           </div>
+        ) : null}
 
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <Building className="w-3 h-3 text-slate-400" />
-              {t.procuringEntity}
+        {tender ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
+              <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5 sm:mb-1 flex items-center gap-1">
+                <FolderKanban className="w-3 h-3 text-slate-400" />
+                <span>{t.tenderId}</span>
+              </div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 font-mono truncate">{tender.tender_id}</div>
             </div>
-            <div className="text-sm font-semibold text-slate-900 truncate" title={tender.procuring_entity}>
-              {tender.procuring_entity}
+
+            <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
+              <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5 sm:mb-1 flex items-center gap-1">
+                <Building2 className="w-3 h-3 text-slate-400" />
+                <span>{t.procuringEntity}</span>
+              </div>
+              <div className="text-xs sm:text-sm font-semibold text-slate-900 truncate" title={tender.procuring_entity}>
+                {tender.procuring_entity}
+              </div>
+            </div>
+
+            <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80">
+              <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5 sm:mb-1 flex items-center gap-1">
+                <User2 className="w-3 h-3 text-slate-400" />
+                <span>{t.bidder}</span>
+              </div>
+              <div className="text-xs sm:text-sm font-semibold text-slate-900 truncate" title={tender.bidder}>
+                {tender.bidder}
+              </div>
+            </div>
+
+            <div className="p-3 sm:p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80">
+              <div className="text-[10px] sm:text-[11px] font-semibold text-amber-800 uppercase tracking-wider mb-0.5 sm:mb-1 flex items-center gap-1">
+                <Calendar className="w-3 h-3 text-amber-700" />
+                <span>{t.deadline}</span>
+              </div>
+              <div className="text-xs sm:text-sm font-bold text-amber-900 font-mono">
+                {tender.submission_deadline}
+              </div>
             </div>
           </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <User className="w-3 h-3 text-slate-400" />
-              {t.bidder}
-            </div>
-            <div className="text-sm font-semibold text-slate-900 truncate" title={tender.bidder}>
-              {tender.bidder}
-            </div>
+        ) : (
+          <div className="text-center py-6 text-slate-400 text-xs">
+            {t.noTenderLoaded}
           </div>
-
-          <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
-            <div className="text-[11px] font-semibold text-amber-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <Calendar className="w-3 h-3 text-amber-700" />
-              {t.deadline}
-            </div>
-            <div className="text-sm font-bold text-amber-900 font-mono flex items-center gap-2">
-              {tender.submission_deadline}
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">
-                Target
-              </span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="text-center py-8 text-slate-400 text-xs">
-          No tender requirements loaded yet. Click "{t.loadSample}" or upload requirements.json.
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };

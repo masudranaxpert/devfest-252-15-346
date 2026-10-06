@@ -1,16 +1,16 @@
 import React from 'react';
-import { FileText, Globe, RefreshCw, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { FileText, RefreshCw, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Language, translations } from '../i18n/translations';
-import { TenderDetails } from '../types';
+import { TenderDetails } from '../types/index.ts';
 
 interface HeaderProps {
-  language: Language;
-  onLanguageChange: (lang: Language) => void;
-  tender: TenderDetails | null;
-  canGenerate: boolean;
-  totalIncluded: number;
-  totalRequired: number;
-  onReset: () => void;
+  readonly language: Language;
+  readonly onLanguageChange: (lang: Language) => void;
+  readonly tender: TenderDetails | null;
+  readonly canGenerate: boolean;
+  readonly totalIncluded: number;
+  readonly totalRequired: number;
+  readonly onReset: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,91 +26,119 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        {/* Brand & Title */}
-        <div className="flex items-center space-x-3.5">
-          <div className="h-10 w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 ring-1 ring-blue-700/30">
-            <FileText className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              {t.appTitle}
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200/60">
-                AI DevFest '26
-              </span>
-            </h1>
-            <p className="text-xs text-slate-500 hidden sm:block">
-              {t.appSubtitle}
-            </p>
-          </div>
-        </div>
-
-        {/* Live Status Indicators & Controls */}
-        <div className="flex items-center flex-wrap gap-2.5 sm:gap-3">
-          {tender && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
-              <span className="font-semibold text-slate-700">{tender.tender_id}</span>
-              <span className="text-slate-300">|</span>
-              <span className="flex items-center gap-1.5 font-medium">
-                {canGenerate ? (
-                  <span className="text-emerald-700 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    {totalIncluded}/{totalRequired} Ready
-                  </span>
-                ) : (
-                  <span className="text-amber-700 flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                    {totalIncluded}/{totalRequired} Completed
-                  </span>
-                )}
-              </span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
+        {/* Top bar on all screens */}
+        <div className="flex items-center justify-between gap-3">
+          {/* Brand */}
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
+              <FileText className="w-5 h-5" />
             </div>
-          )}
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate">
+                  {t.appTitle}
+                </h1>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-700 font-semibold border border-blue-200/60 shrink-0">
+                  DevFest '26
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 hidden sm:block truncate">
+                {t.appSubtitle}
+              </p>
+            </div>
+          </div>
 
-          {/* Reset Button */}
-          <button
-            type="button"
-            onClick={onReset}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg text-xs font-medium transition-colors border border-slate-200/80 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none flex items-center gap-1.5"
-            title={t.resetAll}
-            aria-label={t.resetAll}
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{t.resetAll}</span>
-          </button>
+          {/* Right controls */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Desktop Status Pill */}
+            {tender ? (
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+                <span className="font-semibold text-slate-700 font-mono">{tender.tender_id}</span>
+                <span className="text-slate-300">|</span>
+                <span className="flex items-center gap-1.5 font-medium">
+                  {canGenerate ? (
+                    <span className="text-emerald-700 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      {totalIncluded}/{totalRequired} {language === 'bn' ? 'প্রস্তুত' : 'Ready'}
+                    </span>
+                  ) : (
+                    <span className="text-amber-700 flex items-center gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                      {totalIncluded}/{totalRequired} {language === 'bn' ? 'সম্পন্ন' : 'Complete'}
+                    </span>
+                  )}
+                </span>
+              </div>
+            ) : null}
 
-          {/* Language Switcher */}
-          <div
-            className="inline-flex p-0.5 rounded-lg bg-slate-100 border border-slate-200/80 text-xs font-medium"
-            role="group"
-            aria-label="Language selection"
-          >
+            {/* Reset button */}
             <button
               type="button"
-              onClick={() => onLanguageChange('en')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                language === 'en'
-                  ? 'bg-white text-blue-700 font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-              aria-pressed={language === 'en'}
+              onClick={onReset}
+              className="min-h-[34px] px-2.5 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg text-xs font-medium transition-all border border-slate-200/80 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none flex items-center gap-1 active:scale-[0.98]"
+              title={t.resetAll}
+              aria-label={t.resetAll}
             >
-              English
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">{t.resetAll}</span>
             </button>
-            <button
-              type="button"
-              onClick={() => onLanguageChange('bn')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                language === 'bn'
-                  ? 'bg-white text-blue-700 font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-              aria-pressed={language === 'bn'}
+
+            {/* Language switch */}
+            <div
+              className="inline-flex p-0.5 rounded-lg bg-slate-100 border border-slate-200/80 text-xs font-medium items-center"
+              role="group"
+              aria-label="Language selection"
             >
-              বাংলা
-            </button>
+              <button
+                type="button"
+                onClick={() => onLanguageChange('en')}
+                className={`min-h-[30px] px-2.5 py-1 rounded-md transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
+                  language === 'en'
+                    ? 'bg-white text-blue-700 font-bold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                aria-pressed={language === 'en'}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => onLanguageChange('bn')}
+                className={`min-h-[30px] px-2.5 py-1 rounded-md transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
+                  language === 'bn'
+                    ? 'bg-white text-blue-700 font-bold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                aria-pressed={language === 'bn'}
+              >
+                বাং
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Status Sub-bar */}
+        {tender ? (
+          <div className="flex lg:hidden items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-100 text-xs">
+            <span className="font-semibold text-slate-700 font-mono text-[11px] truncate">
+              {tender.tender_id}
+            </span>
+            <div className="flex items-center gap-1.5 font-medium shrink-0">
+              {canGenerate ? (
+                <span className="text-emerald-700 text-[11px] flex items-center gap-1 font-semibold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {totalIncluded}/{totalRequired} {language === 'bn' ? 'প্রস্তুত' : 'Ready'}
+                </span>
+              ) : (
+                <span className="text-amber-700 text-[11px] flex items-center gap-1 font-semibold">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                  {totalIncluded}/{totalRequired} {language === 'bn' ? 'সম্পন্ন' : 'Complete'}
+                </span>
+              )}
+            </div>
+          </div>
+        ) : null}
       </div>
     </header>
   );

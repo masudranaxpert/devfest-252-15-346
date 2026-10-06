@@ -87,7 +87,7 @@ export const App: React.FC = () => {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Tender Dossier Overview */}
+        {/* Tender Overview */}
         <TenderOverview
           language={language}
           tender={tender}

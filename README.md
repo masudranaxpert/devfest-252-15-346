@@ -1,4 +1,4 @@
-# Tender Document Package Builder — AI DevFest 2026
+# Tender Document Package Builder (AI DevFest 2026)
 
 **Participant Name**: Masud Rana  
 **Registration ID**: 252-15-346  
@@ -8,63 +8,77 @@
 
 ---
 
-## 1. Project Overview & Architecture
-Tender Document Package Builder is an autonomous, high-performance, client-side web application built for **AI DevFest 2026**. It allows procurement teams and bidders to load tender document requirements (`requirements.json`), upload batches of PDF documents, automatically detect duplicates, match requirements 1-to-1, enforce strict expiry rules, and generate a standardized, compiled submission PDF dossier with a professional cover page and running pagination footer.
+## 1. Project overview and architecture
 
-### Key Architectural Decisions
-- **Zero-Backend Architecture**: 100% browser-side processing using modern Web Crypto API and `pdf-lib`. No participant backend, edge functions, or cloud databases.
-- **Pure Functional Logic**: All compliance rules, hash detection, schema validations, and status calculations reside in `src/lib/` as pure, testable TypeScript functions.
-- **Single Source of Truth**: State transitions in `src/hooks/useTenderManager.ts` compute derived compliance metrics reactively with zero duplicate effects (Vercel React Best Practices).
-- **Full Bilingual i18n**: Seamless toggling between English and বাংলা (`Noto Sans Bengali`), persisted in `localStorage`.
-- **Accessibility & UX**: High contrast badges, accessible dropzone (`role="button"`, keyboard navigation), responsive layouts, and zero console errors.
+Tender Document Package Builder is a client-side web application for preparing tender submission packages. It loads requirements from `requirements.json`, accepts PDF uploads, detects duplicates via content hashing, matches files to requirements, checks document expiry dates against the submission deadline, and merges included documents into a single PDF with an English cover page and running page footers.
 
----
+### Architecture
 
-## 2. Mandatory Features Completed
-- [x] **Task 4.1: Load Requirements**: Loads `requirements.json` with schema validation, displaying tender metadata and requirements sorted by `order`.
-- [x] **Task 4.2: File Upload & Validation**: Multi-file drag & drop and file input; page counting via `pdf-lib`; rejects non-PDF files (e.g. `company_logo.png`) with descriptive bilingual notices; individual file removal.
-- [x] **Task 4.3: 1-to-1 Document Matching**: Matches uploaded PDFs to requirements; strictly prevents one file from matching multiple requirements or vice-versa; supports unmatching/undoing anytime.
-- [x] **Task 4.4: Expiry Date Entry**: Enables date inputs for requirements where `has_expiry = true` upon matching; disables date entry for unmatched documents.
-- [x] **Task 4.5: Exact Section 5 Status Engine**:
-  - `Missing` (Blocks: YES) — Required document without matched file.
-  - `Expiry date needed` (Blocks: YES) — Expiry requirement matched without date entered.
-  - `Expired` (Blocks: YES) — Expiry date is before submission deadline.
-  - `Not provided` (Blocks: NO) — Optional document without matched file.
-  - `OK` (Blocks: NO) — Matched file with valid expiry (`expiry >= deadline`, including same-day expiry).
-- [x] **Task 4.6: Duplicate Detection**: Web Crypto SHA-256 hashing flags duplicate files (e.g., `experience_cert.pdf` vs `experience_cert (1).pdf`) and blocks assigning duplicates to different requirements.
-- [x] **Task 4.7: Package Generation**: Disables package compilation while any blocking status remains; shows detailed blocking breakdown; creates compliant combined PDF when all clear.
-- [x] **Task 4.8: Package Download**: Automatically names and downloads `<tender_id>_Package.pdf` (e.g. `T-2026-0417_Package.pdf`).
-- [x] **Task 4.9: Bilingual Interface**: English & বাংলা interface; titles respect `title_en` / `title_bn`; exact Section 5 status terms displayed verbatim in English mode.
+- Browser processing: The application processes all files locally using Web Crypto and pdf-lib. It runs without an external server, API route, or database.
+- Logic separation: Status calculation, duplicate hashing, and schema validation reside in `src/lib/` as pure TypeScript functions.
+- State flow: `src/hooks/useTenderManager.ts` manages file attachments and expiry dates, re-evaluating requirement statuses whenever inputs change.
+- Language support: The interface is bilingual (English and Bengali with `Noto Sans Bengali` fallback), with the selected language persisted in `localStorage`.
+- Responsive design: The layout adapts from desktop displays down to mobile viewports (390px) and provides keyboard-accessible file inputs.
 
 ---
 
-## 3. Package Structure (Section 6)
-- [x] **Cover Page**: Page 1 English cover page showing Tender ID, Title, Procuring Entity, Bidder Name, Submission Deadline, Generation Date, and table of included documents.
-- [x] **Order & Sequence**: Included documents concatenated in ascending `order`. All pages included in original sequence; missing optional documents skipped without gaps.
-- [x] **Running Footer**: Centered `<tender_id> | Page X of Y` on every single page (including cover).
-- [x] **Sample Pack Resolution**: Output package `output/T-2026-0417_Package.pdf` generated (16 pages total) resolving expired license, duplicate experience certificate, and scanned declaration (`scan_0042.pdf`).
+## 2. Mandatory features completed
+
+- [x] **Task 4.1: Load requirements**: Validates and loads `requirements.json`, displaying tender metadata and requirements sorted by `order`.
+- [x] **Task 4.2: File upload and validation**: Supports multi-file upload and drag-and-drop, reads page counts with pdf-lib, rejects non-PDF files with localized errors, and allows deleting uploaded files.
+- [x] **Task 4.3: 1-to-1 document matching**: Links uploaded PDFs to specific requirements, enforces that each file and requirement are paired at most once, and allows detaching at any time.
+- [x] **Task 4.4: Expiry date entry**: Prompts for expiry dates on matched documents where `has_expiry = true`.
+- [x] **Task 4.5: Exact Section 5 status engine**:
+  - `Missing` (Blocks: YES): Required document without matched file.
+  - `Expiry date needed` (Blocks: YES): Expiry requirement matched without date entered.
+  - `Expired` (Blocks: YES): Expiry date is before submission deadline.
+  - `Not provided` (Blocks: NO): Optional document without matched file.
+  - `OK` (Blocks: NO): Matched file with valid expiry (`expiry >= deadline`, including same-day expiry).
+- [x] **Task 4.6: Duplicate detection**: Calculates SHA-256 hashes via Web Crypto to flag identical files and prevents assigning duplicates to different requirements.
+- [x] **Task 4.7: Package generation**: Disables package generation while blocking statuses remain, displays blocking reasons, and compiles the combined PDF once all requirements are satisfied.
+- [x] **Task 4.8: Package download**: Downloads `<tender_id>_Package.pdf` directly in the browser.
+- [x] **Task 4.9: Bilingual interface**: Toggles between English and Bengali, displaying document names from `title_en` or `title_bn` and matching status strings.
 
 ---
 
-## 4. Bonus Features Completed
-- [x] **Auto-Matcher**: Automatically suggests and matches uploaded files to requirements based on keyword analysis (`src/lib/autoMatcher.ts`).
-- [x] **Checklist Export (CSV)**: One-click export of compliance checklist table with document order, IDs, titles, filenames, page counts, expiry dates, and statuses.
-- [x] **Corrupted / Protected PDF Guard**: Safe error trapping prevents app crashing on invalid or password-protected files.
-- [x] **One-Click Sample Loader**: Pre-loads official sample requirements and documents for instant evaluation.
+## 3. Package structure (Section 6)
+
+- [x] **Cover page**: Page 1 English cover page displaying Tender ID, Title, Procuring Entity, Bidder Name, Submission Deadline, Generation Date, and table of included documents.
+- [x] **Document order**: Appends included files in ascending order of requirements. All pages of each matched file are preserved in sequence, skipping unprovided optional items.
+- [x] **Running footer**: Adds `<tender_id> | Page X of Y` centered at the bottom of every page, including the cover page.
+- [x] **Sample package**: Generates `output/T-2026-0417_Package.pdf` (16 pages total) after resolving the sample pack's expired license, duplicate certificate, and scanned declaration.
 
 ---
 
-## 5. How to Run & Test
+## 4. Bonus features completed
+
+- [x] **Auto-match**: Matches uploaded files to requirements by filename keyword rules (`src/lib/autoMatcher.ts`).
+- [x] **Checklist export**: Exports compliance status table to CSV with document order, IDs, titles, filenames, page counts, expiry dates, and statuses.
+- [x] **Bad file handling**: Traps corrupted or encrypted PDFs safely with a user-facing error instead of crashing.
+- [x] **Sample data loader**: Pre-loads the official sample requirements and documents for quick testing.
+
+---
+
+## 5. Known limitations and design notes
+
+- In-memory PDF processing: PDF parsing and compilation occur in browser memory. Very large submissions with hundreds of scanned pages depend on available client RAM.
+- Keyword auto-matching: The auto-matcher uses pattern rules on common filenames. Files with unconventional names may require manual matching.
+- Date format: Expiry dates must be in `YYYY-MM-DD` format as specified in the schema.
+
+---
+
+## 6. How to run and test
+
 ### Prerequisites
 - Node.js >= 20
 - npm >= 10
 
-### Installation & Development
+### Installation and scripts
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Run unit & compliance tests (Vitest)
+# 2. Run unit and compliance tests (Vitest)
 npm test
 
 # 3. Start local development server
@@ -79,18 +93,22 @@ npm run preview
 
 ---
 
-## 6. Screenshots
-- **Baseline Unmatched State**: [screenshots/01-baseline-unmatched.png](screenshots/01-baseline-unmatched.png)
-- **Expiry Dates Needed State**: [screenshots/02-expiry-dates-needed.png](screenshots/02-expiry-dates-needed.png)
+## 7. Screenshots
+
+- **Desktop overview**: [screenshots/01-desktop-overview.png](screenshots/01-desktop-overview.png)
+- **Mobile responsive view (iPhone 390px)**: [screenshots/02-mobile-responsive.png](screenshots/02-mobile-responsive.png)
+- **Document statuses and preflight panel**: [screenshots/03-document-statuses.png](screenshots/03-document-statuses.png)
 
 ---
 
-## 7. AI Tools & Key Prompts
-- **AI Tool**: Google Antigravity (Gemini 3.8 Flash / Claude 3.5 Sonnet agentic pairing).
-- **Most Useful Prompt**:
+## 8. AI tools and prompt
+
+- **AI tools**: Google Antigravity (Gemini 3.8 Flash / Claude 3.5 Sonnet pairing).
+- **Most useful prompt**:
   > "complete full contest task end to end. Follow AGENTS.md rules strictly. Compute all results dynamically without hardcoding. Enforce exact Section 5 status rules and Section 6 PDF packaging requirements."
 
 ---
 
-## 8. License
-MIT License — Copyright (c) 2026 Masud Rana.
+## 9. License
+
+MIT License. Copyright (c) 2026 Masud Rana.
