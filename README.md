@@ -1,4 +1,4 @@
-# Tender Document Package Builder (AI DevFest 2026)
+# TenderReady — Tender Submission Package Builder (AI DevFest 2026)
 
 **Participant Name**: Masud Rana  
 **Registration ID**: 252-15-346  
@@ -10,7 +10,7 @@
 
 ## 1. Project overview and architecture
 
-Tender Document Package Builder is a client-side web application for preparing tender submission packages. It loads requirements from `requirements.json`, accepts PDF uploads, detects duplicates via content hashing, matches files to requirements, checks document expiry dates against the submission deadline, and merges included documents into a single PDF with an English cover page and running page footers.
+**TenderReady** (টেন্ডার রেডি — *"সব নথি যাচাই করুন, এক PDF-এ জমা দিন"*) is a fast, client-side web application for preparing tender submission packages. It loads requirements from `requirements.json`, accepts PDF uploads, detects duplicates via content hashing, matches files to requirements, checks document expiry dates against the submission deadline, and merges included documents into a single PDF with an English cover page and running page footers.
 
 ### Architecture
 

@@ -179,7 +179,7 @@ export async function generateTenderPackage(
       fileBytes = new Uint8Array(arrayBuffer);
     }
 
-    const docPdf = await PDFDocument.load(fileBytes, { ignoreEncryption: true });
+    const docPdf = await PDFDocument.load(fileBytes);
     const copiedPages = await mergedPdf.copyPages(docPdf, docPdf.getPageIndices());
     copiedPages.forEach(p => mergedPdf.addPage(p));
   }

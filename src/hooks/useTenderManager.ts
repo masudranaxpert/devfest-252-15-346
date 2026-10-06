@@ -47,7 +47,7 @@ export function useTenderManager(language: 'en' | 'bn') {
           const bytes = new Uint8Array(arrayBuf);
           const [hash, pdfDoc] = await Promise.all([
             computeHash(arrayBuf),
-            PDFDocument.load(bytes, { ignoreEncryption: true }),
+            PDFDocument.load(bytes),
           ]);
           const pageCount = pdfDoc.getPageCount();
           const fileBlob = new Blob([bytes], { type: 'application/pdf' });
