@@ -16,13 +16,10 @@ export const App: React.FC = () => {
     return saved === 'bn' ? 'bn' : 'en';
   });
 
-  // Theme state persisted in localStorage with system preference fallback
+  // Theme state persisted in localStorage (default is always light mode)
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('devfest_tender_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+    return saved === 'dark' ? 'dark' : 'light';
   });
 
   useEffect(() => {

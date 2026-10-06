@@ -38,21 +38,21 @@ export const PreflightPanel: React.FC<PreflightPanelProps> = ({
 
   return (
     <Card className="shadow-xs overflow-hidden">
-      <CardHeader className="pb-3 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
+            <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             {t.statusSummary}
           </CardTitle>
-          <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-600">
+          <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-slate-900 text-sm font-mono">{totalIncludedDocuments}</span>
+              <span className="font-bold text-slate-900 dark:text-slate-100 text-sm font-mono">{totalIncludedDocuments}</span>
               <span>{t.totalDocs}</span>
             </div>
-            <span className="text-slate-300">•</span>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
             <div className="flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-bold text-slate-900 text-sm font-mono">{totalEstimatedPages}</span>
+              <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+              <span className="font-bold text-slate-900 dark:text-slate-100 text-sm font-mono">{totalEstimatedPages}</span>
               <span>{t.totalPagesEst}</span>
             </div>
           </div>
@@ -66,7 +66,7 @@ export const PreflightPanel: React.FC<PreflightPanelProps> = ({
             size="sm"
             onClick={onAutoMatch}
           >
-            <GitMerge className="w-3.5 h-3.5 text-blue-600" />
+            <GitMerge className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>{t.autoMatch}</span>
           </Button>
 
@@ -77,7 +77,7 @@ export const PreflightPanel: React.FC<PreflightPanelProps> = ({
             onClick={onExportCsv}
             disabled={!tender}
           >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             <span>{t.exportCsv}</span>
           </Button>
 
@@ -87,7 +87,11 @@ export const PreflightPanel: React.FC<PreflightPanelProps> = ({
             size="sm"
             onClick={onGeneratePackage}
             disabled={!canGenerate || isGenerating}
-            className={`w-full sm:w-auto font-bold ${canGenerate ? 'bg-blue-600 text-white hover:bg-blue-700' : 'text-slate-400 bg-slate-100'}`}
+            className={`w-full sm:w-auto font-bold ${
+              canGenerate
+                ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-xs'
+                : 'text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-800'
+            }`}
           >
             {isGenerating ? (
               <>
@@ -106,25 +110,25 @@ export const PreflightPanel: React.FC<PreflightPanelProps> = ({
 
       <CardContent className="pt-4">
         {!canGenerate ? (
-          <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 text-xs">
-            <div className="flex items-center gap-2 font-bold text-amber-800 mb-1.5">
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/70 text-amber-900 dark:text-amber-200 text-xs">
+            <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300 mb-1.5">
+              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
               <span>{t.blockingNotice}</span>
             </div>
-            <ul className="list-disc list-inside space-y-1 text-amber-900/90 pl-1">
+            <ul className="list-disc list-inside space-y-1 text-amber-900/90 dark:text-amber-200/90 pl-1">
               {(language === 'bn' ? blockingReasonsBn : blockingReasonsEn).slice(0, 5).map((reason) => (
                 <li key={reason} className="leading-relaxed">{reason}</li>
               ))}
               {blockingReasonsEn.length > 5 ? (
-                <li className="italic text-amber-700">
+                <li className="italic text-amber-700 dark:text-amber-400">
                   +{blockingReasonsEn.length - 5} {language === 'bn' ? 'টি আরও সমস্যা...' : 'more issues...'}
                 </li>
               ) : null}
             </ul>
           </div>
         ) : (
-          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 font-medium">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/70 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2 font-medium">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{t.allClearNotice}</span>
           </div>
         )}

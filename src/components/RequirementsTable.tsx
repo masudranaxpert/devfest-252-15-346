@@ -173,7 +173,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
       ) : null}
 
       {/* MOBILE VIEW: Adaptive Responsive Cards (No horizontal overflow!) */}
-      <div className="block md:hidden divide-y divide-slate-100 p-3 space-y-3">
+      <div className="block md:hidden divide-y divide-slate-100 dark:divide-slate-800 p-3 space-y-3">
         {filteredRequirements.map((item) => {
           const req = item.requirement;
           const title = language === 'bn' ? req.title_bn : req.title_en;
@@ -184,27 +184,27 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
               key={req.id}
               className={`p-3.5 rounded-xl border transition-all ${
                 item.isBlocking
-                  ? 'bg-rose-50/25 border-rose-200/70'
+                  ? 'bg-rose-50/25 dark:bg-rose-950/25 border-rose-200/70 dark:border-rose-900/60'
                   : item.status === 'OK'
-                  ? 'bg-emerald-50/20 border-emerald-200/60'
-                  : 'bg-white border-slate-200/80'
+                  ? 'bg-emerald-50/20 dark:bg-emerald-950/20 border-emerald-200/60 dark:border-emerald-900/60'
+                  : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800'
               }`}
             >
               {/* Card Header: Order, Title, Badges */}
               <div className="flex items-start justify-between gap-2 mb-2.5">
                 <div className="flex items-start gap-2 min-w-0">
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 text-slate-800 text-xs font-bold shrink-0 mt-0.5">
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold shrink-0 mt-0.5">
                     {req.order}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-slate-900 text-xs sm:text-sm leading-snug">
+                    <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-xs sm:text-sm leading-snug">
                       {title}
                     </h3>
-                    <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                       {req.id} • {req.mandatory ? (
-                        <span className="text-rose-600 font-semibold">{t.mandatory}</span>
+                        <span className="text-rose-600 dark:text-rose-400 font-semibold">{t.mandatory}</span>
                       ) : (
-                        <span className="text-slate-500">{t.optional}</span>
+                        <span className="text-slate-500 dark:text-slate-400">{t.optional}</span>
                       )}
                     </div>
                   </div>
@@ -217,7 +217,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
               </div>
 
               {/* Card Body: File selector */}
-              <div className="space-y-2 pt-2 border-t border-slate-100/80">
+              <div className="space-y-2 pt-2 border-t border-slate-100/80 dark:border-slate-800">
                 <div className="flex items-center gap-1.5">
                   <CustomSelect
                     id={`mobile-match-${req.id}`}
@@ -233,7 +233,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                     <button
                       type="button"
                       onClick={() => onMatchFile(req.id, null)}
-                      className="p-2 min-h-[38px] min-w-[38px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 border border-slate-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                      className="p-2 min-h-[38px] min-w-[38px] flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-lg transition-all shrink-0 border border-slate-200 dark:border-slate-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
                       title={t.unmatch}
                       aria-label={`${t.unmatch} ${title}`}
                     >
@@ -247,9 +247,9 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                   <div className="flex items-center gap-2 pt-1">
                     <label
                       htmlFor={`mobile-expiry-${req.id}`}
-                      className="text-[11px] font-medium text-slate-600 shrink-0 flex items-center gap-1 cursor-pointer"
+                      className="text-[11px] font-medium text-slate-600 dark:text-slate-400 shrink-0 flex items-center gap-1 cursor-pointer"
                     >
-                      <Calendar className="w-3 h-3 text-slate-400" />
+                      <Calendar className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                       {t.expiryDate}:
                     </label>
                     <DatePicker
@@ -266,7 +266,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
 
                 {/* Status Message Text */}
                 {item.isBlocking ? (
-                  <div className="text-[10px] text-rose-600 font-medium pt-1">
+                  <div className="text-[10px] text-rose-600 dark:text-rose-400 font-medium pt-1">
                     {language === 'bn' ? item.statusMessageBn : item.statusMessageEn}
                   </div>
                 ) : null}
@@ -280,7 +280,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
+            <tr className="bg-slate-50 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[11px]">
               <th scope="col" className="py-3.5 px-4 w-12 text-center">{t.order}</th>
               <th scope="col" className="py-3.5 px-4 min-w-[200px]">{t.documentTitle}</th>
               <th scope="col" className="py-3.5 px-4 w-24">{t.requirementType}</th>
@@ -290,7 +290,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
               <th scope="col" className="py-3.5 px-4 min-w-[150px]">{t.status}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {filteredRequirements.map((item) => {
               const req = item.requirement;
               const title = language === 'bn' ? req.title_bn : req.title_en;
@@ -299,32 +299,32 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
               return (
                 <tr
                   key={req.id}
-                  className={`hover:bg-slate-50/80 transition-colors ${
-                    item.isBlocking ? 'bg-rose-50/20' : ''
+                  className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors ${
+                    item.isBlocking ? 'bg-rose-50/20 dark:bg-rose-950/25' : ''
                   }`}
                 >
-                  <td className="py-3 px-4 text-center font-bold text-slate-700">
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 text-slate-800 text-xs">
+                  <td className="py-3 px-4 text-center font-bold text-slate-700 dark:text-slate-300">
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold font-mono">
                       {req.order}
                     </span>
                   </td>
 
                   <td className="py-3 px-4">
-                    <div className="font-semibold text-slate-900 text-xs sm:text-sm">
+                    <div className="font-semibold text-slate-900 dark:text-slate-100 text-xs sm:text-sm">
                       {title}
                     </div>
-                    <div className="text-[11px] text-slate-500 font-mono">
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                       ID: {req.id}
                     </div>
                   </td>
 
                   <td className="py-3 px-4">
                     {req.mandatory ? (
-                      <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                      <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
                         {t.mandatory}
                       </span>
                     ) : (
-                      <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                         {t.optional}
                       </span>
                     )}
@@ -346,7 +346,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                         <button
                           type="button"
                           onClick={() => onMatchFile(req.id, null)}
-                          className="p-1.5 min-h-[34px] min-w-[34px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                          className="p-1.5 min-h-[34px] min-w-[34px] flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-lg transition-all shrink-0 active:scale-95 border border-slate-200 dark:border-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
                           title={t.unmatch}
                           aria-label={`${t.unmatch} ${title}`}
                         >
@@ -356,7 +356,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                     </div>
                   </td>
 
-                  <td className="py-3 px-4 text-center text-slate-700 font-medium">
+                  <td className="py-3 px-4 text-center text-slate-700 dark:text-slate-300 font-medium">
                     {item.matchedFile ? item.matchedFile.pageCount : '-'}
                   </td>
 
@@ -372,7 +372,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                         hasError={item.status === 'Expired'}
                       />
                     ) : (
-                      <span className="text-slate-500 text-[11px] font-medium">
+                      <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">
                         N/A
                       </span>
                     )}
@@ -381,7 +381,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                   <td className="py-3 px-4">
                     <div>{getStatusBadge(item.status)}</div>
                     {item.isBlocking ? (
-                      <div className="text-[10px] text-rose-700 font-semibold mt-1">
+                      <div className="text-[10px] text-rose-700 dark:text-rose-400 font-semibold mt-1">
                         {language === 'bn'
                           ? item.statusMessageBn
                           : item.statusMessageEn}
