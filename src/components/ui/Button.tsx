@@ -10,9 +10,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'default', size = 'default', disabled, ...props }, ref) => {
     const variants = {
       default: 'bg-blue-600 text-white hover:bg-blue-700 shadow-xs active:scale-[0.98]',
-      secondary: 'bg-slate-100 text-slate-800 hover:bg-slate-200/80 active:scale-[0.98]',
-      outline: 'border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 active:scale-[0.98]',
-      ghost: 'hover:bg-slate-100 text-slate-700 hover:text-slate-900 active:scale-[0.98]',
+      secondary: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-200/80 dark:hover:bg-slate-700 active:scale-[0.98]',
+      outline: 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 active:scale-[0.98]',
+      ghost: 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white active:scale-[0.98]',
       destructive: 'bg-rose-600 text-white hover:bg-rose-700 shadow-xs active:scale-[0.98]',
       success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs active:scale-[0.98]',
     };

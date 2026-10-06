@@ -115,10 +115,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             'w-full min-h-[38px] text-xs font-mono rounded-lg py-2 pl-3 pr-9 border transition-all duration-150',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:border-blue-600',
             disabled
-              ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+              ? 'bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 cursor-not-allowed'
               : hasError
-              ? 'border-rose-400 bg-rose-50/40 text-rose-900'
-              : 'border-slate-300 bg-white text-slate-800'
+              ? 'border-rose-400 dark:border-rose-700 bg-rose-50/40 dark:bg-rose-950/40 text-rose-900 dark:text-rose-300'
+              : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100'
           )}
         />
         <button
@@ -126,7 +126,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           disabled={disabled}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
           className={cn(
-            'absolute right-1.5 p-1.5 text-slate-400 hover:text-blue-600 rounded-md transition-colors active:scale-95',
+            'absolute right-1.5 p-1.5 text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors active:scale-95',
             disabled && 'cursor-not-allowed opacity-50'
           )}
           title="Open Calendar"
@@ -148,18 +148,18 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               setIsOpen(false);
             }
           }}
-          className="absolute right-0 sm:left-0 top-full mt-1.5 z-50 bg-white border border-slate-200 rounded-xl shadow-xl p-3 w-68 text-slate-800 animate-in fade-in-0 zoom-in-95 duration-100 motion-reduce:animate-none"
+          className="absolute right-0 sm:left-0 top-full mt-1.5 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-3 w-68 text-slate-800 dark:text-slate-100 animate-in fade-in-0 zoom-in-95 duration-100 motion-reduce:animate-none"
         >
           {/* Header */}
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-            <span className="text-xs font-semibold text-slate-800">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800">
+            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
               {monthNames[month]} {year}
             </span>
             <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={handlePrevMonth}
-                className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 aria-label="Previous month"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
@@ -167,7 +167,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               <button
                 type="button"
                 onClick={handleNextMonth}
-                className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 aria-label="Next month"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -176,7 +176,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           </div>
 
           {/* Weekday Labels */}
-          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-slate-500 mb-1">
+          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
             <span>Su</span>
             <span>Mo</span>
             <span>Tu</span>
@@ -209,7 +209,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     'h-7 w-7 sm:h-7.5 sm:w-7.5 mx-auto flex items-center justify-center rounded-md text-[11px] font-medium transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
                     isSelected
                       ? 'bg-blue-600 text-white font-bold shadow-xs'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                   )}
                 >
                   {day}
@@ -219,14 +219,14 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           </div>
 
           {/* Quick Actions Footer */}
-          <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-slate-100 text-[11px]">
+          <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
             <button
               type="button"
               onClick={() => {
                 onChange('');
                 setIsOpen(false);
               }}
-              className="text-slate-500 hover:text-rose-600 font-medium p-1 rounded transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+              className="text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 font-medium p-1 rounded transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
             >
               Clear
             </button>
@@ -236,7 +236,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 onChange('2026-10-20');
                 setIsOpen(false);
               }}
-              className="text-blue-600 hover:text-blue-800 font-semibold p-1 rounded transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold p-1 rounded transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               Deadline (Oct 20)
             </button>

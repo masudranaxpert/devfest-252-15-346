@@ -3,7 +3,7 @@
 **Participant Name**: Masud Rana  
 **Registration ID**: 252-15-346  
 **Repository**: [https://github.com/masudranaxpert/devfest-252-15-346](https://github.com/masudranaxpert/devfest-252-15-346)  
-**Live URL**: [Pending Vercel/VPS Deployment]  
+**Live URL**: [https://devfest.masud-rana.me](https://devfest.masud-rana.me)  
 **Contest Time (T0)**: 2026-10-06 17:40:00 +06:00  
 
 ---

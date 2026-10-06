@@ -56,12 +56,15 @@ export interface Translations {
   pageCountLabel: string;
   selectFilePlaceholder: string;
   noTenderLoaded: string;
+  darkMode: string;
+  lightMode: string;
+  themeToggle: string;
 }
 
 export const translations: Record<Language, Translations> = {
   en: {
-    appTitle: 'Tender Package Builder',
-    appSubtitle: 'Match files, verify expiry dates, and compile your submission PDF',
+    appTitle: 'TenderReady',
+    appSubtitle: 'Verify all documents, submit in a single PDF',
     loadSample: 'Load Sample',
     loadJson: 'Import JSON',
     uploadFiles: 'Upload Documents',
@@ -114,11 +117,14 @@ export const translations: Record<Language, Translations> = {
     filterBlocking: 'Blocking',
     filterOk: 'Ready',
     pageCountLabel: 'pages',
-    noTenderLoaded: 'No tender requirements loaded yet. Click "Load Sample" or import requirements.json.'
+    noTenderLoaded: 'No tender requirements loaded yet. Click "Load Sample" or import requirements.json.',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
+    themeToggle: 'Toggle theme'
   },
   bn: {
-    appTitle: 'টেন্ডার প্যাকেজ বিল্ডার',
-    appSubtitle: 'নথি সংযুক্ত করুন, মেয়াদ যাচাই করুন এবং টেন্ডার PDF প্রস্তুত করুন',
+    appTitle: 'টেন্ডার রেডি',
+    appSubtitle: 'সব নথি যাচাই করুন, এক PDF-এ জমা দিন',
     loadSample: 'নমুনা লোড',
     loadJson: 'JSON আপলোড',
     uploadFiles: 'নথি আপলোড',
@@ -171,6 +177,9 @@ export const translations: Record<Language, Translations> = {
     filterBlocking: 'সমস্যাযুক্ত',
     filterOk: 'যাচাইকৃত',
     pageCountLabel: 'পৃষ্ঠা',
-    noTenderLoaded: 'কোনো টেন্ডার তথ্য লোড করা হয়নি। "নমুনা লোড" ক্লিক করুন অথবা requirements.json ফাইল দিন।'
+    noTenderLoaded: 'কোনো টেন্ডার তথ্য লোড করা হয়নি। "নমুনা লোড" ক্লিক করুন অথবা requirements.json ফাইল দিন।',
+    darkMode: 'ডার্ক মোড',
+    lightMode: 'লাইট মোড',
+    themeToggle: 'থিম পরিবর্তন'
   }
 };

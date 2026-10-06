@@ -8,6 +8,18 @@ export interface GeneratePackageOptions {
 }
 
 /**
+ * Replaces any character Helvetica / WinAnsi cannot encode with '?'.
+ * Helvetica standard font supports ASCII 32-126 and standard WinAnsi Latin-1 extension chars.
+ */
+export function safeText(input: string | undefined | null): string {
+  if (!input) return '';
+  return input.replace(
+    /[^\x20-\x7E\xA0-\xFF\u20AC\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\u017D\u2018\u2019\u201C\u201D\u2022\u2013\u2014\u02DC\u2122\u0161\u203A\u0153\u017E\u0178]/g,
+    '?'
+  );
+}
+
+/**
  * Generates the unified tender submission package adhering to Section 6.
  */
 export async function generateTenderPackage(
@@ -66,7 +78,7 @@ export async function generateTenderPackage(
       font: fontHelveticaBold,
       color: rgb(0.35, 0.4, 0.45),
     });
-    coverPage.drawText(value || 'N/A', {
+    coverPage.drawText(safeText(value) || 'N/A', {
       x: 180,
       y: curY,
       size: 10,
@@ -78,12 +90,12 @@ export async function generateTenderPackage(
 
   const todayStr = new Date().toISOString().split('T')[0];
 
-  drawMetaRow('Tender ID:', tender.tender_id);
-  drawMetaRow('Tender Title:', tender.title);
-  drawMetaRow('Procuring Entity:', tender.procuring_entity);
-  drawMetaRow('Bidder Name:', tender.bidder);
-  drawMetaRow('Submission Deadline:', tender.submission_deadline);
-  drawMetaRow('Package Created Date:', todayStr);
+  drawMetaRow('Tender ID:', safeText(tender.tender_id));
+  drawMetaRow('Tender Title:', safeText(tender.title));
+  drawMetaRow('Procuring Entity:', safeText(tender.procuring_entity));
+  drawMetaRow('Bidder Name:', safeText(tender.bidder));
+  drawMetaRow('Submission Deadline:', safeText(tender.submission_deadline));
+  drawMetaRow('Package Created Date:', safeText(todayStr));
 
   curY -= 15;
   coverPage.drawLine({
@@ -124,17 +136,20 @@ export async function generateTenderPackage(
   // Table rows
   includedDocs.forEach((item, idx) => {
     if (curY < 60) return; // Guard against table overflow
-    const orderLabel = `${item.requirement.order}`;
-    const title = item.requirement.title_en.length > 32 
+    const orderLabel = safeText(`${item.requirement.order}`);
+    const rawTitle = item.requirement.title_en.length > 32 
       ? item.requirement.title_en.slice(0, 30) + '...' 
       : item.requirement.title_en;
-    const fileName = item.matchedFile 
+    const title = safeText(rawTitle);
+    const rawFileName = item.matchedFile 
       ? (item.matchedFile.name.length > 25 ? item.matchedFile.name.slice(0, 23) + '...' : item.matchedFile.name)
       : 'None';
-    const validityText = item.requirement.has_expiry && item.expiryDate 
+    const fileName = safeText(rawFileName);
+    const rawValidityText = item.requirement.has_expiry && item.expiryDate 
       ? `Exp: ${item.expiryDate}` 
       : (item.status === 'OK' ? 'Verified OK' : item.status);
-    const pagesText = item.matchedFile ? `${item.matchedFile.pageCount}` : '0';
+    const validityText = safeText(rawValidityText);
+    const pagesText = safeText(item.matchedFile ? `${item.matchedFile.pageCount}` : '0');
 
     if (idx % 2 === 1) {
       coverPage.drawRectangle({
@@ -175,7 +190,7 @@ export async function generateTenderPackage(
   for (let i = 0; i < totalPages; i++) {
     const page = mergedPdf.getPage(i);
     const { width: pWidth } = page.getSize();
-    const footerText = `${tender.tender_id} | Page ${i + 1} of ${totalPages}`;
+    const footerText = `${safeText(tender.tender_id)} | Page ${i + 1} of ${totalPages}`;
     const textWidth = fontHelvetica.widthOfTextAtSize(footerText, 8.5);
 
     // Subtle hairline separator above footer

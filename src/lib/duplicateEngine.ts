@@ -21,27 +21,32 @@ export async function computeHash(buffer: ArrayBuffer): Promise<string> {
 
 /**
  * Flags duplicate files across an uploaded list.
- * Marks later instances as duplicates of the first file with the same content hash.
+ * Marks every file in a same-hash group (count > 1) as duplicate.
  */
 export function identifyDuplicates(files: UploadedFileRecord[]): UploadedFileRecord[] {
-  const hashToFirstFile = new Map<string, string>();
+  const hashGroups = new Map<string, UploadedFileRecord[]>();
+  for (const file of files) {
+    if (!hashGroups.has(file.hash)) {
+      hashGroups.set(file.hash, []);
+    }
+    hashGroups.get(file.hash)!.push(file);
+  }
 
   return files.map(file => {
-    if (!hashToFirstFile.has(file.hash)) {
-      hashToFirstFile.set(file.hash, file.id);
-      return {
-        ...file,
-        isDuplicate: false,
-        duplicateOf: undefined
-      };
-    } else {
-      const originalId = hashToFirstFile.get(file.hash)!;
+    const group = hashGroups.get(file.hash) || [];
+    if (group.length > 1) {
+      const sibling = group.find(f => f.id !== file.id) || group[0];
       return {
         ...file,
         isDuplicate: true,
-        duplicateOf: originalId
+        duplicateOf: sibling.id
       };
     }
+    return {
+      ...file,
+      isDuplicate: false,
+      duplicateOf: undefined
+    };
   });
 }
 

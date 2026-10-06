@@ -12,12 +12,12 @@ export const Badge: React.FC<BadgeProps> = ({
 }) => {
   const variants = {
     default: 'border-transparent bg-blue-600 text-white',
-    secondary: 'border-transparent bg-slate-100 text-slate-800',
-    outline: 'border-slate-300 text-slate-700 bg-white',
-    success: 'border-emerald-200 bg-emerald-50 text-emerald-700 font-bold',
-    destructive: 'border-rose-200 bg-rose-50 text-rose-700 font-bold',
-    warning: 'border-amber-200 bg-amber-50 text-amber-800 font-bold',
-    muted: 'border-slate-200 bg-slate-100 text-slate-600 font-medium',
+    secondary: 'border-transparent bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200',
+    outline: 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900',
+    success: 'border-emerald-200 dark:border-emerald-800/80 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-bold',
+    destructive: 'border-rose-200 dark:border-rose-800/80 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 font-bold',
+    warning: 'border-amber-200 dark:border-amber-800/80 bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-400 font-bold',
+    muted: 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-medium',
   };
 
   return (

@@ -90,33 +90,33 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
         onKeyDown={handleKeyDown}
         className={cn(
-          'w-full min-h-[38px] flex items-center justify-between text-left text-xs bg-white border border-slate-300 rounded-lg py-2 px-3 text-slate-800 transition-all duration-150',
+          'w-full min-h-[38px] flex items-center justify-between text-left text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-slate-800 dark:text-slate-100 transition-all duration-150',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:border-blue-600 active:scale-[0.99]',
-          disabled && 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed active:scale-100',
+          disabled && 'bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 cursor-not-allowed active:scale-100',
           isOpen && 'border-blue-500 ring-2 ring-blue-500/20'
         )}
       >
         <div className="flex items-center gap-2 truncate pr-2">
           {selectedOption ? (
             <>
-              <FileText className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-              <span className="truncate font-medium text-slate-800">
+              <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span className="truncate font-medium text-slate-800 dark:text-slate-100">
                 {selectedOption.label}
               </span>
               {selectedOption.pageCount !== undefined && (
-                <span className="shrink-0 text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                <span className="shrink-0 text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono">
                   {selectedOption.pageCount}p
                 </span>
               )}
             </>
           ) : (
-            <span className="text-slate-500 truncate">{placeholder}</span>
+            <span className="text-slate-500 dark:text-slate-400 truncate">{placeholder}</span>
           )}
         </div>
         <ChevronDown
           className={cn(
-            'w-4 h-4 text-slate-400 shrink-0 transition-transform duration-150',
-            isOpen && 'rotate-180 text-blue-600'
+            'w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0 transition-transform duration-150',
+            isOpen && 'rotate-180 text-blue-600 dark:text-blue-400'
           )}
         />
       </button>
@@ -133,7 +133,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
               triggerRef.current?.focus();
             }
           }}
-          className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-y-auto divide-y divide-slate-100 animate-in fade-in-0 zoom-in-95 duration-100 motion-reduce:animate-none"
+          className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 animate-in fade-in-0 zoom-in-95 duration-100 motion-reduce:animate-none"
         >
           {/* Default unselect / placeholder option */}
           <button
@@ -142,12 +142,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
             aria-selected={value === ''}
             onClick={() => handleSelect('')}
             className={cn(
-              'w-full min-h-[36px] text-left px-3 py-2 text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:bg-slate-100',
-              value === '' ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-slate-50'
+              'w-full min-h-[36px] text-left px-3 py-2 text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:bg-slate-100 dark:focus-visible:bg-slate-800',
+              value === '' ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
             )}
           >
             <span>{placeholder}</span>
-            {value === '' && <Check className="w-3.5 h-3.5 text-blue-600" />}
+            {value === '' && <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
           </button>
 
           {options.map((opt) => {
@@ -161,32 +161,32 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 disabled={opt.disabled}
                 onClick={() => !opt.disabled && handleSelect(opt.value)}
                 className={cn(
-                  'w-full min-h-[36px] text-left px-3 py-2 text-xs flex items-center justify-between gap-2 transition-colors focus-visible:outline-none focus-visible:bg-slate-100 active:bg-slate-100',
-                  isSelected && 'bg-blue-50 text-blue-800 font-medium',
-                  !isSelected && !opt.disabled && 'text-slate-800 hover:bg-slate-50',
-                  opt.disabled && 'bg-slate-50 text-slate-400 cursor-not-allowed opacity-60'
+                  'w-full min-h-[36px] text-left px-3 py-2 text-xs flex items-center justify-between gap-2 transition-colors focus-visible:outline-none focus-visible:bg-slate-100 dark:focus-visible:bg-slate-800 active:bg-slate-100 dark:active:bg-slate-800',
+                  isSelected && 'bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 font-medium',
+                  !isSelected && !opt.disabled && 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70',
+                  opt.disabled && 'bg-slate-50 dark:bg-slate-900/50 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
                 )}
               >
                 <div className="flex items-center gap-2 truncate min-w-0">
                   <span className="truncate">{opt.label}</span>
                   {opt.pageCount !== undefined && (
-                    <span className="shrink-0 text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded font-mono">
+                    <span className="shrink-0 text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 py-0.2 rounded font-mono">
                       {opt.pageCount}p
                     </span>
                   )}
                   {opt.isDuplicate && (
-                    <span className="shrink-0 text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded font-medium flex items-center gap-1">
+                    <span className="shrink-0 text-[10px] bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 px-1.5 py-0.2 rounded font-medium flex items-center gap-1">
                       <AlertTriangle className="w-2.5 h-2.5" />
                       Duplicate
                     </span>
                   )}
                   {opt.isMatched && !isSelected && (
-                    <span className="shrink-0 text-[10px] bg-slate-200 text-slate-700 px-1 py-0.2 rounded">
+                    <span className="shrink-0 text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-1 py-0.2 rounded">
                       Matched
                     </span>
                   )}
                 </div>
-                {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />}
               </button>
             );
           })}

@@ -63,36 +63,36 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
     switch (status) {
       case 'OK':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             {t.okSuccess}
           </span>
         );
       case 'Missing':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-            <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+            <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
             {t.missingError}
           </span>
         );
       case 'Expired':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-            <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+            <AlertCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
             {t.expiredError}
           </span>
         );
       case 'Expiry date needed':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
-            <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+            <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
             {t.expiryNeededError}
           </span>
         );
       case 'Not provided':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+            <HelpCircle className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
             {t.notProvidedNotice}
           </span>
         );
@@ -106,30 +106,30 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
   });
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs overflow-hidden">
       {/* Header & Filter Controls */}
-      <div className="p-4 sm:p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <FileText className="w-4 h-4 text-blue-600" />
+          <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
+            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             {t.checklistTitle}
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             {t.checklistSubtitle}
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium self-start sm:self-auto" role="group" aria-label="Filter requirements">
-          <Filter className="w-3.5 h-3.5 text-slate-500 ml-1.5 hidden sm:block" />
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-xl text-xs font-medium self-start sm:self-auto" role="group" aria-label="Filter requirements">
+          <Filter className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 ml-1.5 hidden sm:block" />
           <button
             type="button"
             onClick={() => setFilterMode('all')}
             aria-pressed={filterMode === 'all'}
             className={`px-2.5 py-1 rounded-lg transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
               filterMode === 'all'
-                ? 'bg-white text-slate-900 font-bold shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             {t.filterAll} ({evaluatedRequirements.length})
@@ -140,8 +140,8 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
             aria-pressed={filterMode === 'blocking'}
             className={`px-2.5 py-1 rounded-lg transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
               filterMode === 'blocking'
-                ? 'bg-white text-rose-700 font-bold shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-rose-700 dark:text-rose-400 font-bold shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             {t.filterBlocking} (
@@ -154,8 +154,8 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
             aria-pressed={filterMode === 'ok'}
             className={`px-2.5 py-1 rounded-lg transition-all text-xs active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
               filterMode === 'ok'
-                ? 'bg-white text-emerald-700 font-bold shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 font-bold shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             {t.filterOk} (
@@ -166,8 +166,8 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
       </div>
 
       {duplicateWarningMessage ? (
-        <div className="mx-4 sm:mx-6 my-3 p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+        <div className="mx-4 sm:mx-6 my-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
           <span>{duplicateWarningMessage}</span>
         </div>
       ) : null}
@@ -281,13 +281,13 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
         <table className="w-full text-left border-collapse text-xs">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
-              <th className="py-3.5 px-4 w-12 text-center">{t.order}</th>
-              <th className="py-3.5 px-4 min-w-[200px]">{t.documentTitle}</th>
-              <th className="py-3.5 px-4 w-24">{t.requirementType}</th>
-              <th className="py-3.5 px-4 min-w-[240px]">{t.attachedFile}</th>
-              <th className="py-3.5 px-4 w-16 text-center">{t.pages}</th>
-              <th className="py-3.5 px-4 min-w-[170px]">{t.expiryDate}</th>
-              <th className="py-3.5 px-4 min-w-[150px]">{t.status}</th>
+              <th scope="col" className="py-3.5 px-4 w-12 text-center">{t.order}</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[200px]">{t.documentTitle}</th>
+              <th scope="col" className="py-3.5 px-4 w-24">{t.requirementType}</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[240px]">{t.attachedFile}</th>
+              <th scope="col" className="py-3.5 px-4 w-16 text-center">{t.pages}</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[170px]">{t.expiryDate}</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[150px]">{t.status}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -346,7 +346,7 @@ export const RequirementsTable: React.FC<RequirementsTableProps> = ({
                         <button
                           type="button"
                           onClick={() => onMatchFile(req.id, null)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                          className="p-1.5 min-h-[34px] min-w-[34px] flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
                           title={t.unmatch}
                           aria-label={`${t.unmatch} ${title}`}
                         >

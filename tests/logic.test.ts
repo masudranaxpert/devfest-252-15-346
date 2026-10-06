@@ -3,6 +3,7 @@ import { calculateDocumentStatus, evaluateTenderPackage } from '../src/lib/statu
 import { identifyDuplicates, validateDuplicateMatch } from '../src/lib/duplicateEngine';
 import { validateRequirementsJson, validateUploadedFile } from '../src/lib/validation';
 import { suggestMatches } from '../src/lib/autoMatcher';
+import { safeText } from '../src/lib/pdfPackage';
 import { Requirement, UploadedFileRecord } from '../src/types';
 
 describe('Tender Compliance Engine Tests (AI DevFest 2026)', () => {
@@ -159,7 +160,7 @@ describe('Tender Compliance Engine Tests (AI DevFest 2026)', () => {
         { id: 'f3', name: 'tin.pdf', size: 2606, pageCount: 1, hash: 'md5_diff', isDuplicate: false, file: {} as File }
       ];
       const identified = identifyDuplicates(files);
-      expect(identified[0].isDuplicate).toBe(false);
+      expect(identified[0].isDuplicate).toBe(true);
       expect(identified[1].isDuplicate).toBe(true);
       expect(identified[1].duplicateOf).toBe('f1');
       expect(identified[2].isDuplicate).toBe(false);
@@ -304,6 +305,18 @@ describe('Tender Compliance Engine Tests (AI DevFest 2026)', () => {
       const generatedDoc = await PDFDocument.load(pdfBytes);
       // Cover page (1) + R01 (1) + R02 (1) + R03 (1) + R04 (1) + R05 (2) + R08 (6) + R09 (2) + R10 (1) = 16 pages
       expect(generatedDoc.getPageCount()).toBe(16);
+    });
+  });
+
+  describe('PDF safeText Sanitization', () => {
+    it('preserves valid ASCII / Latin-1 characters', () => {
+      expect(safeText('Tender T-2026-0417')).toBe('Tender T-2026-0417');
+    });
+
+    it('replaces unencodable characters with question mark', () => {
+      expect(safeText('ট্রেড লাইসেন্স')).toBe('????? ????????');
+      expect(safeText('')).toBe('');
+      expect(safeText(null)).toBe('');
     });
   });
 });

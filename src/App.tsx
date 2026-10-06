@@ -16,10 +16,28 @@ export const App: React.FC = () => {
     return saved === 'bn' ? 'bn' : 'en';
   });
 
+  // Theme state persisted in localStorage with system preference fallback
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('devfest_tender_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  });
+
   useEffect(() => {
     localStorage.setItem('devfest_tender_lang', language);
     document.documentElement.lang = language;
   }, [language]);
+
+  useEffect(() => {
+    localStorage.setItem('devfest_tender_theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  const handleToggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
 
   const t = translations[language];
 
@@ -75,7 +93,7 @@ export const App: React.FC = () => {
   }, [requirements]);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       <Header
         language={language}
         onLanguageChange={setLanguage}
@@ -83,7 +101,8 @@ export const App: React.FC = () => {
         canGenerate={validation.canGenerate}
         totalIncluded={validation.totalIncludedDocuments}
         totalRequired={totalMandatory}
-        onReset={handleReset}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -127,7 +146,7 @@ export const App: React.FC = () => {
         />
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
         <p>{t.footerNotice} • Masud Rana (ID: 252-15-346)</p>
       </footer>
     </div>

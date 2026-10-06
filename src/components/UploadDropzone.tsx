@@ -54,13 +54,13 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
 
   return (
     <Card className="shadow-xs overflow-hidden">
-      <CardHeader className="pb-3 border-b border-slate-100 flex flex-row items-center justify-between gap-3">
+      <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between gap-3">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <FileUp className="w-4 h-4 text-blue-600" />
+            <FileUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             {t.uploadFiles}
           </CardTitle>
-          <CardDescription className="mt-0.5">
+          <CardDescription className="mt-0.5 text-slate-500 dark:text-slate-400">
             {t.supportedFormat}
           </CardDescription>
         </div>
@@ -71,8 +71,8 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
 
       <CardContent className="pt-4 space-y-4">
         {errorMessage ? (
-          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
             <span>{errorMessage}</span>
           </div>
         ) : null}
@@ -81,6 +81,7 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
         <div
           role="button"
           tabIndex={0}
+          aria-label={t.dragDropText}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
@@ -91,10 +92,10 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
               fileInputRef.current?.click();
             }
           }}
-          className={`border-2 border-dashed rounded-xl p-5 sm:p-6 text-center cursor-pointer transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+          className={`border-2 border-dashed rounded-xl p-5 sm:p-6 text-center cursor-pointer transition-all duration-150 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
             isDragging
-              ? 'border-blue-500 bg-blue-50/50 scale-[0.99]'
-              : 'border-slate-300 hover:border-blue-400 hover:bg-slate-50/60'
+              ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/40 scale-[0.99]'
+              : 'border-slate-300 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-slate-50/60 dark:hover:bg-slate-900/40'
           }`}
         >
           <input
@@ -110,13 +111,13 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
             className="hidden"
           />
           <div className="flex flex-col items-center justify-center">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2.5">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-2.5">
               <FileUp className="w-5 h-5" />
             </div>
-            <p className="text-xs sm:text-sm font-semibold text-slate-800">
+            <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
               {t.dragDropText}
             </p>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
               {t.supportedFormat}
             </p>
           </div>
@@ -125,8 +126,8 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
         {/* Uploaded File List */}
         {uploadedFiles.length > 0 ? (
           <div>
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-slate-400" />
+            <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               <span>{t.uploadedFilesTitle}</span>
             </div>
 
@@ -141,16 +142,16 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
                     key={f.id}
                     className={`p-2.5 rounded-xl border flex items-center justify-between gap-2.5 transition-all ${
                       f.isDuplicate
-                        ? 'bg-amber-50/40 border-amber-300 text-amber-900'
-                        : 'bg-slate-50/60 border-slate-200 text-slate-800'
+                        ? 'bg-amber-50/40 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+                        : 'bg-slate-50/60 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-slate-200'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div
                         className={`p-1.5 rounded-lg shrink-0 ${
                           f.isDuplicate
-                            ? 'bg-amber-100 text-amber-700'
-                            : 'bg-blue-100/70 text-blue-700'
+                            ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400'
+                            : 'bg-blue-100/70 dark:bg-blue-950/70 text-blue-700 dark:text-blue-400'
                         }`}
                       >
                         <FileText className="w-4 h-4" />
@@ -159,16 +160,16 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
                         <div className="text-xs font-semibold truncate" title={f.name}>
                           {f.name}
                         </div>
-                        <div className="text-[10px] text-slate-500 flex items-center gap-1.5 mt-0.5">
-                          <span className="flex items-center gap-0.5 font-medium text-slate-700">
-                            <Layers className="w-3 h-3 text-slate-400" />
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
+                          <span className="flex items-center gap-0.5 font-medium text-slate-700 dark:text-slate-300">
+                            <Layers className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                             {f.pageCount} {t.pageCountLabel}
                           </span>
                           <span>•</span>
                           <span>{formatFileSize(f.size)}</span>
                         </div>
                         {f.isDuplicate ? (
-                          <div className="text-[10px] font-bold text-amber-700 mt-0.5 flex items-center gap-1 truncate">
+                          <div className="text-[10px] font-bold text-amber-700 dark:text-amber-400 mt-0.5 flex items-center gap-1 truncate">
                             <Files className="w-2.5 h-2.5 shrink-0" />
                             <span className="truncate">
                               {t.duplicateWarning} {origFile ? `(${origFile.name})` : ''}
@@ -186,7 +187,7 @@ export const UploadDropzone: React.FC<UploadDropzoneProps> = ({
                         e.stopPropagation();
                         onRemove(f.id);
                       }}
-                      className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 shrink-0"
+                      className="text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 shrink-0"
                       title={t.removeFile}
                       aria-label={`${t.removeFile} ${f.name}`}
                     >

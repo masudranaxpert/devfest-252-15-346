@@ -88,7 +88,11 @@ export function useTenderManager(language: 'en' | 'bn') {
       const validation = validateRequirementsJson(data);
 
       if (!validation.valid || !validation.config) {
-        setLoadError(validation.errors[0]?.messageEn || 'Invalid schema');
+        setLoadError(
+          language === 'bn'
+            ? validation.errors[0]?.messageBn || 'ভুল স্কিমা'
+            : validation.errors[0]?.messageEn || 'Invalid schema'
+        );
         return;
       }
 
@@ -96,9 +100,13 @@ export function useTenderManager(language: 'en' | 'bn') {
       setRequirements(validation.config.requirements);
       await loadSampleDocuments();
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Failed to load sample');
+      setLoadError(
+        language === 'bn'
+          ? 'নমুনা ডেটা লোড করতে ব্যর্থ হয়েছে।'
+          : err instanceof Error ? err.message : 'Failed to load sample'
+      );
     }
-  }, [loadSampleDocuments]);
+  }, [loadSampleDocuments, language]);
 
   // Initial load
   useEffect(() => {
@@ -133,9 +141,10 @@ export function useTenderManager(language: 'en' | 'bn') {
           try {
             const arrayBuf = await file.arrayBuffer();
             const bytes = new Uint8Array(arrayBuf);
+            // Load PDF without ignoreEncryption so password-protected PDFs are rejected
             const [hash, pdfDoc] = await Promise.all([
               computeHash(arrayBuf),
-              PDFDocument.load(bytes, { ignoreEncryption: true }),
+              PDFDocument.load(bytes),
             ]);
             const pageCount = pdfDoc.getPageCount();
 
@@ -186,11 +195,26 @@ export function useTenderManager(language: 'en' | 'bn') {
     try {
       setLoadError(null);
       const text = await file.text();
-      const parsed = JSON.parse(text);
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        setLoadError(
+          language === 'bn'
+            ? 'JSON ফাইলটি পার্স করা যায়নি (ত্রুটিপূর্ণ ফরম্যাট)।'
+            : 'Failed to parse JSON file (invalid format).'
+        );
+        return;
+      }
+
       const val = validateRequirementsJson(parsed);
 
       if (!val.valid || !val.config) {
-        setLoadError(val.errors[0]?.messageEn || 'Invalid schema');
+        setLoadError(
+          language === 'bn'
+            ? val.errors[0]?.messageBn || 'ভুল স্কিমা'
+            : val.errors[0]?.messageEn || 'Invalid schema'
+        );
         return;
       }
 
@@ -198,10 +222,18 @@ export function useTenderManager(language: 'en' | 'bn') {
       setRequirements(val.config.requirements);
       setMatches({});
       setExpiryDates({});
-    } catch {
-      setLoadError('Failed to parse JSON file.');
+      // Clear uploaded files, errors, and warnings so old files do not mix with new pack
+      setUploadedFiles([]);
+      setUploadError(null);
+      setDuplicateWarning(null);
+    } catch (err) {
+      setLoadError(
+        language === 'bn'
+          ? 'ফাইল লোড করতে ব্যর্থ হয়েছে।'
+          : err instanceof Error ? err.message : 'Failed to parse JSON file.'
+      );
     }
-  }, []);
+  }, [language]);
 
   const handleMatchFile = useCallback(
     (requirementId: string, fileId: string | null) => {
